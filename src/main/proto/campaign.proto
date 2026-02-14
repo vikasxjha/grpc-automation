@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package campaign;
+
+option java_multiple_files = true;
+option java_package = "com.mapbox.grpc.campaign";
+option java_outer_classname = "CampaignProto";
+
+// Campaign Service for testing
+service CampaignService {
+  // Get campaign details
+  rpc GetCampaign(GetCampaignRequest) returns (GetCampaignResponse);
+
+  // List campaigns with streaming
+  rpc ListCampaigns(ListCampaignsRequest) returns (stream CampaignMessage);
+
+  // Upload campaign data with client streaming
+  rpc UploadCampaignData(stream CampaignDataChunk) returns (UploadResponse);
+
+  // Bidirectional streaming for campaign sync
+  rpc SyncCampaigns(stream CampaignSyncRequest) returns (stream CampaignSyncResponse);
+}
+
+message GetCampaignRequest {
+  string caller = 1;
+  string receiver = 2;
+  string campaign_id = 3;
+  map<string, string> metadata = 4;
+}
+
+message GetCampaignResponse {
+  string campaign_id = 1;
+  string title = 2;
+  string subtitle = 3;
+  string description = 4;
+  CampaignStatus status = 5;
+  repeated string tags = 6;
+  map<string, string> properties = 7;
+  int64 created_at = 8;
+  int64 updated_at = 9;
+}
+
+message ListCampaignsRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message CampaignMessage {
+  string campaign_id = 1;
+  string title = 2;
+  CampaignStatus status = 3;
+}
+
+message CampaignDataChunk {
+  bytes data = 1;
+  int32 sequence = 2;
+}
+
+message UploadResponse {
+  bool success = 1;
+  string message = 2;
+  int32 chunks_received = 3;
+}
+
+message CampaignSyncRequest {
+  string campaign_id = 1;
+  int64 timestamp = 2;
+}
+
+message CampaignSyncResponse {
+  string campaign_id = 1;
+  bool synced = 2;
+  string message = 3;
+}
+
+enum CampaignStatus {
+  UNKNOWN = 0;
+  ACTIVE = 1;
+  PAUSED = 2;
+  COMPLETED = 3;
+  CANCELLED = 4;
+}
+

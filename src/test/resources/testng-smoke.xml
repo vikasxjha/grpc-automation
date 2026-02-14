@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Smoke Test Suite" parallel="false" thread-count="1" verbose="1">
+
+    <test name="Critical Smoke Tests">
+        <classes>
+            <class name="com.mapbox.tests.functional.CampaignFunctionalTests">
+                <methods>
+                    <include name="testGetCampaignSuccess"/>
+                    <include name="testGetCampaignSubtitle"/>
+                </methods>
+            </class>
+            <class name="com.mapbox.tests.negative.CampaignNegativeTests">
+                <methods>
+                    <include name="testInvalidPhoneNumberReturnsInvalidArgument"/>
+                    <include name="testNonExistentCampaignReturnsNotFound"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
+
